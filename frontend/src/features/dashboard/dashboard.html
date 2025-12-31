@@ -1,0 +1,229 @@
+<div class="dashboard-container">
+  
+  <!-- Header -->
+  <header class="dash-header">
+    <div class="dash-header-left">
+      <h1 class="dash-title">MARS-SIGHT AR</h1>
+      <div class="server-status">
+        <span class="status-dot"></span>
+        <span>Online</span>
+      </div>
+    </div>
+    
+    <div class="dash-header-right">
+      <button id="btn-start-mission" class="btn-start-mission">
+        <img src="/icons/dashboard/Start-mission.svg" alt="Start" class="icon-btn" />
+        <span>Start mission</span>
+      </button>
+      
+      <div class="header-divider"></div>
+      
+      <button class="btn-notifications">
+        <img src="/icons/dashboard/notifications.svg" alt="Notifications" class="icon-btn" />
+        <span class="notification-badge">3</span>
+      </button>
+      
+      <button id="btn-archives" class="btn-user-profile" style="margin-right:10px; background:rgba(0,100,255,0.2); border:1px solid #0055aa; color:white; font-weight:bold;">
+        ARCHIVOS
+      </button>
+
+      <button id="btn-taxonomia" class="btn-user-profile" style="margin-right:15px; background:rgba(39,174,96,0.2); border:1px solid #27ae60; color:#2ecc71; font-weight:bold;">
+        TAXONOMÍA
+      </button>
+
+      <div class="user-profile-dropdown" id="user-profile-container" style="position:relative;">
+        <button class="btn-user-profile" id="btn-user-profile">
+          <span class="user-avatar" id="user-avatar">S</span>
+          <span class="user-name" id="user-name">Schormaker</span>
+          <span style="margin-left:5px; font-size:0.7rem;">▼</span>
+        </button>
+        <div class="profile-dropdown-menu" id="profile-dropdown" style="display:none; position:absolute; top:100%; right:0; margin-top:8px; background:rgba(0,10,30,0.95); border:1px solid #3fa8ff; border-radius:10px; min-width:180px; z-index:1000; backdrop-filter:blur(10px);">
+          <div style="padding:15px; border-bottom:1px solid rgba(63,168,255,0.2);">
+            <div style="font-size:0.85rem; color:#888;">Conectado como</div>
+            <div style="font-weight:bold; color:#3fa8ff;" id="dropdown-email">user@email.com</div>
+          </div>
+          <button id="btn-logout" style="width:100%; padding:12px 15px; background:transparent; border:none; color:#ff6b6b; font-family:'Jura',sans-serif; font-size:0.95rem; cursor:pointer; text-align:left; transition:background 0.2s;">
+            🚪 Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Grid -->
+  <div class="dash-main">
+    
+    <!-- Left: Telemetry Panel -->
+    <aside class="dash-telemetry scanline-effect">
+      <h3 class="telem-title">Telemetría</h3>
+      
+      <div class="telem-metric">
+        <span class="telem-value" id="telem-temp">20°C</span>
+        <span class="telem-label">TEMPERATURA</span>
+      </div>
+      
+      <div class="telem-metric">
+        <span class="telem-value" id="telem-o2">96%</span>
+        <span class="telem-label">O2</span>
+      </div>
+      
+      <div class="telem-metric">
+        <span class="telem-value" id="telem-bpm">75</span>
+        <span class="telem-label">BPM</span>
+      </div>
+      
+      <div class="telem-metric">
+        <span class="telem-value" id="telem-rad">0.011</span>
+        <span class="telem-label">RAD</span>
+      </div>
+    </aside>
+
+    <!-- Center: AI Chat with Llama 3 -->
+    <section class="dash-ai-chat">
+      <div class="chat-header">
+        <img src="/icons/dashboard/IA.svg" alt="IA" class="chat-icon-img" />
+        <span class="chat-title">Llama 3.8</span>
+        
+        <div class="chat-actions">
+           <button id="btn-chat-history" class="icon-action-btn" title="Historial">
+             <img src="/icons/history.svg" alt="History" />
+           </button>
+           <button id="btn-new-chat" class="icon-action-btn" title="Nuevo Chat">
+             <img src="/icons/new-chat.svg" alt="New Chat" />
+           </button>
+        </div>
+      </div>
+      
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-message ai-message">
+          ¿Cómo puedo ayudarte hoy?
+        </div>
+      </div>
+      
+      <div class="chat-suggestions" id="chat-suggestions">
+        <button class="suggestion-btn" data-prompt="Examinar los objetos que se han registrado en este último viaje">
+          Examinar los objetos que se han registrado en este último viaje
+        </button>
+        <button class="suggestion-btn" data-prompt="Revisar los últimos POIs y medí la distancia que se ha recorrido">
+          Revisar los últimos POIs y medí la distancia que se ha recorrido
+        </button>
+        <button class="suggestion-btn" data-prompt="Examinar los objetos que no tienen descripción y darles una">
+          Examinar los objetos que no tienen descripción y darles una
+        </button>
+      </div>
+      
+      <div class="chat-input-container">
+        <input 
+          type="text" 
+          id="chat-input" 
+          class="chat-input" 
+          placeholder="Pregúntale algo a la IA..."
+          autocomplete="off"
+        />
+        <button id="btn-send-chat" class="btn-send-chat">
+          <span>→</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Right: Data Grid -->
+    <aside class="dash-data-grid">
+      
+      <!-- POIs Card -->
+      <div class="data-card">
+        <div class="data-card-header">
+          <img src="/icons/dashboard/POIs.svg" alt="POIs" class="card-icon-img" />
+          <span class="card-title">POIs</span>
+          <span class="data-count" id="pois-count">20</span>
+        </div>
+        <div class="data-list" id="pois-list">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Minerals Card -->
+      <div class="data-card">
+        <div class="data-card-header">
+          <img src="/icons/dashboard/Minerals.svg" alt="Minerals" class="card-icon-img" />
+          <span class="card-title">Minerals</span>
+          <span class="data-count" id="minerals-count">85</span>
+        </div>
+        <div class="data-list" id="minerals-list">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Missions Card -->
+      <div class="data-card">
+        <div class="data-card-header">
+          <img src="/icons/dashboard/Missions.png" alt="Missions" class="card-icon-img" />
+          <span class="card-title">Missions</span>
+          <span class="data-count" id="missions-count">24</span>
+        </div>
+        <div class="data-list" id="missions-list">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Objects Card -->
+      <div class="data-card">
+        <div class="data-card-header">
+          <img src="/icons/dashboard/Objects.svg" alt="Objects" class="card-icon-img" />
+          <span class="card-title">Objects</span>
+          <span class="data-count" id="objects-count">85</span>
+        </div>
+        <div class="data-list" id="objects-list">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  </div>
+
+  <!-- Mission Modal -->
+  <div class="history-modal" id="mission-modal" style="display:none; align-items:center; justify-content:center;">
+    <div class="history-content" style="height:auto; min-height:300px; max-width:500px;">
+      <div class="history-header">
+        <h3>INICIAR NUEVA MISIÓN</h3>
+        <button id="btn-close-mission" class="btn-close-history">×</button>
+      </div>
+      <div style="padding:25px; color:white; display:flex; flex-direction:column; gap:15px;">
+        <div>
+            <label style="display:block; margin-bottom:8px; color:#00aaff; font-weight:bold;">NOMBRE DE MISIÓN</label>
+            <input type="text" id="inp-dash-mission-title" placeholder="Ej: Exploración Sector 7" 
+                   style="width:100%; padding:12px 15px; background:rgba(0,0,0,0.3); border:1px solid #0055aa; color:white; border-radius:8px; box-sizing:border-box; font-family:'Jura',sans-serif;">
+        </div>
+        
+        <div>
+            <label style="display:block; margin-bottom:8px; color:#00aaff; font-weight:bold;">ZONA / OBJETIVO</label>
+            <input type="text" id="inp-dash-mission-zone" placeholder="Ej: Cráter Jezero Norte" 
+                   style="width:100%; padding:12px 15px; background:rgba(0,0,0,0.3); border:1px solid #0055aa; color:white; border-radius:8px; box-sizing:border-box; font-family:'Jura',sans-serif;">
+        </div>
+
+        <div style="margin-top:10px; display:flex; gap:10px;">
+             <button id="btn-confirm-start-mission" 
+                     style="flex:1; padding:14px; background:#00aaff; border:none; color:white; font-weight:bold; cursor:pointer; border-radius:10px; font-family:'Jura',sans-serif;">
+                DESPEGAR 🚀
+             </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Modal -->
+  <div class="history-modal" id="history-modal">
+    <div class="history-content">
+      <div class="history-header">
+        <h3>Historial de Conversaciones</h3>
+        <button id="btn-close-history" class="btn-close-history">×</button>
+      </div>
+      <div class="history-list" id="history-list">
+        <!-- Dyn items -->
+      </div>
+    </div>
+  </div>
+
+</div>

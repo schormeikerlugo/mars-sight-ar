@@ -1,0 +1,243 @@
+version: '3.8'
+
+services:
+  # ===========================================
+  # BASE DE DATOS - PostgreSQL + PostGIS
+  # ===========================================
+  postgres:
+    image: supabase/postgres:15.1.0.147
+    container_name: mars-sight-db
+    ports:
+      - "54322:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mars2025
+      JWT_SECRET: 55a6dca744ee4e41c5c59be899a1fd185fb12c76b8eecc232ccd8cf6babed5d5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      mars-network:
+        aliases:
+          - db
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ===========================================
+  # KONG API GATEWAY
+  # ===========================================
+  kong:
+    image: kong:2.8.1
+    container_name: mars-sight-kong
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_PLUGINS: request-transformer,cors,key-auth,acl
+      KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
+      KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
+    volumes:
+      - ./kong.yml:/var/lib/kong/kong.yml:ro
+    ports:
+      - "54321:8000"
+      - "54323:8443"
+    depends_on:
+      - auth
+      - rest
+      - storage
+      - meta
+    networks:
+      - mars-network
+    restart: unless-stopped
+
+  # ===========================================
+  # POSTGREST - REST API
+  # ===========================================
+  rest:
+    image: postgrest/postgrest:v12.0.1
+    container_name: mars-sight-rest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGRST_DB_URI: postgres://postgres:mars2025@postgres:5432/postgres
+      PGRST_DB_SCHEMAS: public,storage,graphql_public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: 55a6dca744ee4e41c5c59be899a1fd185fb12c76b8eecc232ccd8cf6babed5d5
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+    networks:
+      - mars-network
+
+  # ===========================================
+  # AUTH - GoTrue
+  # ===========================================
+  auth:
+    image: supabase/gotrue:v2.94.0
+    container_name: mars-sight-auth
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      API_EXTERNAL_URL: http://localhost:54321
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://postgres:mars2025@postgres:5432/postgres?search_path=auth
+      GOTRUE_SITE_URL: http://localhost:5173
+      GOTRUE_URI_ALLOW_LIST: "*"
+      GOTRUE_DISABLE_SIGNUP: "false"
+      GOTRUE_JWT_SECRET: 55a6dca744ee4e41c5c59be899a1fd185fb12c76b8eecc232ccd8cf6babed5d5
+      GOTRUE_JWT_EXP: 3600
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_MAILER_AUTOCONFIRM: "true"
+      GOTRUE_SMTP_ADMIN_EMAIL: admin@example.com
+      GOTRUE_SMTP_HOST: mail
+      GOTRUE_SMTP_PORT: 2500
+      GOTRUE_SMTP_USER: fake_mail_user
+      GOTRUE_SMTP_PASS: fake_mail_password
+      GOTRUE_SMTP_SENDER_NAME: Mars-Sight
+    networks:
+      - mars-network
+
+  # ===========================================
+  # STORAGE API
+  # ===========================================
+  storage:
+    image: supabase/storage-api:v0.43.11
+    container_name: mars-sight-storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rest:
+        condition: service_started
+    environment:
+      ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzY3MDIyNTc1LCJleHAiOjQ5MjA2MjI1NzV9.ar9_aoOo-Cd7VVibO00kL0qCTa3lGh0IRmoFPmstrq8
+      SERVICE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE3NjcwMjI1NzUsImV4cCI6NDkyMDYyMjU3NX0.8yY4_OYHapxiZaukJAoXrBxAGJSPV3MUualCsfOz36Q
+      POSTGREST_URL: http://rest:3000
+      DATABASE_URL: postgres://postgres:mars2025@postgres:5432/postgres
+      FILE_SIZE_LIMIT: 52428800
+      STORAGE_BACKEND: file
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+      TENANT_ID: stub
+      REGION: local
+      GLOBAL_S3_BUCKET: stub
+      IS_MULTITENANT: "false"
+      PGRST_JWT_SECRET: 55a6dca744ee4e41c5c59be899a1fd185fb12c76b8eecc232ccd8cf6babed5d5
+      AUTH_JWT_SECRET: 55a6dca744ee4e41c5c59be899a1fd185fb12c76b8eecc232ccd8cf6babed5d5
+      AUTH_JWT_ALGORITHM: HS256
+    volumes:
+      - storage_data:/var/lib/storage
+    networks:
+      - mars-network
+
+  # ===========================================
+  # POSTGRES META - Database Management API
+  # ===========================================
+  meta:
+    image: supabase/postgres-meta:v0.80.0
+    container_name: mars-sight-meta
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_META_PORT: 8080
+      PG_META_DB_HOST: postgres
+      PG_META_DB_PORT: 5432
+      PG_META_DB_NAME: postgres
+      PG_META_DB_USER: postgres
+      PG_META_DB_PASSWORD: mars2025
+    networks:
+      - mars-network
+
+  # ===========================================
+  # SUPABASE STUDIO - Dashboard UI
+  # ===========================================
+  studio:
+    image: supabase/studio:2025.10.20-sha-5005fc6
+    container_name: mars-sight-studio
+    depends_on:
+      - kong
+      - meta
+    environment:
+      STUDIO_PG_META_URL: http://meta:8080
+      POSTGRES_PASSWORD: mars2025
+      SUPABASE_URL: http://kong:8000
+      SUPABASE_PUBLIC_URL: http://localhost:54321
+      NEXT_PUBLIC_SUPABASE_URL: http://localhost:54321
+      SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzY3MDIyNTc1LCJleHAiOjQ5MjA2MjI1NzV9.ar9_aoOo-Cd7VVibO00kL0qCTa3lGh0IRmoFPmstrq8
+      SUPABASE_SERVICE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE3NjcwMjI1NzUsImV4cCI6NDkyMDYyMjU3NX0.8yY4_OYHapxiZaukJAoXrBxAGJSPV3MUualCsfOz36Q
+      DEFAULT_PROJECT_REF: default
+    ports:
+      - "3001:3000"
+    networks:
+      - mars-network
+
+  # ===========================================
+  # BACKEND - FastAPI
+  # ===========================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mars-sight-backend
+    environment:
+      DATABASE_URL: postgresql://postgres:mars2025@postgres:5432/postgres
+      OLLAMA_URL: http://ollama:11434
+      SUPABASE_URL: http://kong:8000
+      SUPABASE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE3NjcwMjI1NzUsImV4cCI6NDkyMDYyMjU3NX0.8yY4_OYHapxiZaukJAoXrBxAGJSPV3MUualCsfOz36Q
+    ports:
+      - "8001:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    networks:
+      - mars-network
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # ===========================================
+  # OLLAMA - Local AI
+  # ===========================================
+  ollama:
+    image: ollama/ollama:latest
+    container_name: mars-sight-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - mars-network
+
+  # ===========================================
+  # FRONTEND (opcional)
+  # ===========================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: mars-sight-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - mars-network
+    environment:
+      - VITE_SUPABASE_URL=http://localhost:54321
+      - VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzY3MDIyNTc1LCJleHAiOjQ5MjA2MjI1NzV9.ar9_aoOo-Cd7VVibO00kL0qCTa3lGh0IRmoFPmstrq8
+
+volumes:
+  postgres_data:
+  ollama_data:
+  storage_data:
+
+
+networks:
+  mars-network:
+    driver: bridge
