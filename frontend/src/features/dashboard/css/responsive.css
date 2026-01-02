@@ -1,0 +1,161 @@
+/**
+ * Dashboard Responsive Styles
+ * Breakpoints and mobile adaptations
+ */
+
+/* Large tablets */
+@media (max-width: 1400px) {
+    .dash-main {
+        grid-template-columns: 150px 1fr 350px;
+    }
+
+    .telem-value {
+        font-size: 1.6rem;
+    }
+}
+
+/* Tablets */
+@media (max-width: 1200px) {
+    .dash-main {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        height: auto;
+    }
+
+    .dash-telemetry {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .telem-metric {
+        flex: 1;
+    }
+
+    .dash-data-grid {
+        grid-template-rows: auto;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 15px;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .dash-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        height: auto;
+    }
+
+    .dash-header-left,
+    .dash-header-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .header-divider {
+        display: none;
+    }
+
+    .dash-main {
+        gap: 15px;
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    /* Hide telemetry title on mobile */
+    .telem-title {
+        display: none;
+    }
+
+    .dash-telemetry {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        height: auto;
+        padding: 15px;
+    }
+
+    .telem-metric {
+        flex: none;
+        min-width: 0;
+        padding: 20px 5px;
+    }
+
+    .telem-value {
+        font-size: 1.2rem;
+    }
+
+    .dash-data-grid {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .data-card {
+        height: auto;
+    }
+
+    /* Mobile header layout */
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    .desktop-nav {
+        display: none !important;
+    }
+
+    .dash-header {
+        padding: 12px 15px;
+        height: auto;
+    }
+
+    .dash-header-left {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+        justify-content: space-between;
+    }
+
+    .header-title-group {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .dash-title {
+        font-size: 1rem;
+    }
+
+    .server-status {
+        display: flex;
+        font-size: 0.7rem;
+    }
+
+    .server-status span:last-child {
+        font-size: 0.7rem;
+    }
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    .dashboard-container {
+        padding: 15px;
+    }
+
+    /* Hide chat panel, show FAB */
+    .dash-ai-chat {
+        display: none;
+    }
+
+    .chat-fab {
+        display: flex;
+    }
+}

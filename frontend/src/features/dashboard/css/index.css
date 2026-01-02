@@ -1,0 +1,18 @@
+/**
+ * Dashboard CSS Index
+ * Central import file for all dashboard styles
+ */
+
+/* Base & Container */
+@import './base.css';
+
+/* Components */
+@import './header.css';
+@import './telemetry.css';
+@import './chat.css';
+@import './data-grid.css';
+@import './history-modal.css';
+@import './mobile-menu.css';
+
+/* Responsive */
+@import './responsive.css';

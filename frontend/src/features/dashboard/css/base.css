@@ -1,0 +1,88 @@
+/**
+ * Dashboard Base Styles
+ * Container and layout fundamentals
+ */
+
+.dashboard-container {
+    width: 100%;
+    min-height: 100vh;
+    background: #000;
+    font-family: var(--font-jura);
+    padding: 40px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+/* Main Layout Grid */
+.dash-main {
+    display: grid;
+    grid-template-columns: 184px 770px minmax(0, 1fr);
+    gap: 20px;
+    flex: 1;
+    min-height: 600px;
+}
+
+/* Animations */
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes hologlow {
+    0% {
+        box-shadow: 0 0 5px rgba(63, 168, 255, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 15px rgba(63, 168, 255, 0.6);
+    }
+
+    100% {
+        box-shadow: 0 0 5px rgba(63, 168, 255, 0.2);
+    }
+}

@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <title>Mars-Sight AR (Vanilla)</title>
-    <link rel="stylesheet" href="/src/css/tokens.css" />
-    <link rel="stylesheet" href="/src/css/style.css" />
-  </head>
-  <body style="margin: 0; overflow: hidden">
-    <div id="app">
-      <!-- Views will be injected here -->
-      <div
-        id="loading-screen"
-        style="
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Mars-Sight AR (Vanilla)</title>
+  <link rel="stylesheet" href="/src/css/tokens.css" />
+  <link rel="stylesheet" href="/src/css/style.css" />
+</head>
+
+<body style="margin: 0">
+  <div id="app">
+    <!-- Views will be injected here -->
+    <div id="loading-screen" style="
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -23,12 +20,12 @@
           height: 100vh;
           color: var(--color-primary-500);
           font-family: var(--font-mono);
-        "
-      >
-        <div class="loader"></div>
-        <p>INICIANDO SISTEMA ODRADEK...</p>
-      </div>
+        ">
+      <div class="loader"></div>
+      <p>INICIANDO SISTEMA ODRADEK...</p>
     </div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>

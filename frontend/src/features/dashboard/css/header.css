@@ -1,0 +1,222 @@
+/**
+ * Dashboard Header Styles
+ * Header, nav buttons, profile dropdown
+ */
+
+.dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-dash-primary);
+    backdrop-filter: var(--blur-dash);
+    border-radius: var(--radius-dash);
+    padding: 15px 25px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 100;
+    overflow: visible;
+    height: 73px;
+}
+
+.dash-header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.dash-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: #00ffff;
+    text-shadow: 0 0 10px rgba(63, 168, 255, 0.6);
+    letter-spacing: 2px;
+}
+
+.server-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #aaa;
+    text-transform: uppercase;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #00ff00;
+    box-shadow: 0 0 10px #00ff00;
+    animation: pulse-glow 2s infinite;
+}
+
+.dash-header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Start Mission Button */
+.btn-start-mission {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(63, 168, 255, 0.1);
+    border: 2px solid #3FA8FF;
+    color: #3FA8FF;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-family: var(--font-jura);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-start-mission:hover {
+    background: rgba(63, 168, 255, 0.2);
+    box-shadow: var(--glow-cyan);
+    transform: translateY(-2px);
+}
+
+.header-divider {
+    width: 1px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.icon-btn {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+/* Notifications */
+.btn-notifications {
+    position: relative;
+    background: transparent;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-notifications:hover {
+    color: #3FA8FF;
+    transform: scale(1.1);
+}
+
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #ff4444;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+}
+
+/* User Profile */
+.btn-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(63, 168, 255, 0.05);
+    border: 1px solid rgba(63, 168, 255, 0.3);
+    padding: 8px 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #fff;
+}
+
+.btn-user-profile:hover {
+    border-color: #3FA8FF;
+    background: rgba(63, 168, 255, 0.1);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3FA8FF, #0088ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #000;
+    font-size: 1rem;
+}
+
+.user-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #fff;
+}
+
+/* Profile Dropdown */
+.user-profile-dropdown {
+    position: relative;
+}
+
+.profile-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: rgba(0, 10, 30, 0.98);
+    border: 1px solid #3FA8FF;
+    border-radius: 12px;
+    min-width: 200px;
+    z-index: 9999;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(63, 168, 255, 0.2);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.profile-dropdown-menu button:hover {
+    background: rgba(255, 107, 107, 0.1);
+}
+
+/* Navigation Buttons */
+.btn-nav-item {
+    padding: 10px 18px;
+    background: rgba(0, 100, 255, 0.15);
+    border: 1px solid rgba(63, 168, 255, 0.5);
+    color: #3fa8ff;
+    font-family: var(--font-jura);
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-nav-item:hover {
+    background: rgba(63, 168, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(63, 168, 255, 0.3);
+}
+
+.btn-nav-item.btn-taxonomia {
+    background: rgba(39, 174, 96, 0.15);
+    border-color: rgba(46, 204, 113, 0.5);
+    color: #2ecc71;
+}
+
+.btn-nav-item.btn-taxonomia:hover {
+    background: rgba(46, 204, 113, 0.25);
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
