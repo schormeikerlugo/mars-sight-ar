@@ -1,0 +1,58 @@
+/* ========== MAIN CONTAINER ========== */
+.archives-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ========== HEADER ========== */
+.archives-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-archives-primary);
+    backdrop-filter: var(--blur-archives);
+    border-radius: var(--radius-archives);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 20px 30px;
+}
+
+.header-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.btn-back {
+    background: rgba(63, 168, 255, 0.1);
+    border: 2px solid var(--cyan);
+    color: var(--cyan);
+    padding: 12px 25px;
+    border-radius: 12px;
+    font-family: 'Jura', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-back:hover {
+    background: rgba(63, 168, 255, 0.2);
+    box-shadow: var(--cyan-glow);
+}
+
+/* ========== MAIN LAYOUT ========== */
+.archives-main {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 20px;
+    flex: 1;
+}

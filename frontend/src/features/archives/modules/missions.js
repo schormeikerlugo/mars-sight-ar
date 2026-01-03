@@ -63,9 +63,27 @@ export class MissionsManager {
             this.dom.missionList.appendChild(filters);
         }
 
+        // Get currently "En Vivo" mission from local storage
+        const currentLiveId = localStorage.getItem('mars_current_mission_id');
+
         this.missions.forEach(m => {
             const card = document.createElement('div');
-            card.className = `mission-card ${this.activeMissionId === m.id ? 'active' : ''}`;
+
+            // Logic: 
+            // 1. Live (En Curso) = Active AND matches currentLiveId
+            // 2. Active (Activo) = Active BUT NOT currentLiveId
+            // 3. Completed = Finalized
+
+            let statusClass = 'status-completed';
+            if (m.estado === 'activa') {
+                if (m.id == currentLiveId) {
+                    statusClass = 'status-live'; // Green
+                } else {
+                    statusClass = 'status-active'; // Blue
+                }
+            }
+
+            card.className = `mission-card ${statusClass} ${this.activeMissionId === m.id ? 'active' : ''}`;
             card.onclick = () => this.selectMission(m.id);
 
             const dateStr = new Date(m.inicio_at).toLocaleDateString('es-ES', {
@@ -99,14 +117,23 @@ export class MissionsManager {
         const isOrphaned = id === 'orphaned';
         const titleText = isOrphaned ? "OBJETOS SIN MISIÓN" : (mission.titulo || mission.codigo).toUpperCase();
 
-        let headerHtml = `<span>${titleText}</span>`;
+        // Set Title text
+        this.dom.headerTitle.textContent = titleText;
+
+        // Reset Buttons
+        if (this.dom.btnFinishMission) this.dom.btnFinishMission.style.display = 'none';
+        if (this.dom.btnDeleteMission) this.dom.btnDeleteMission.style.display = 'none';
+
+        // Show Buttons based on state
         if (mission && !isOrphaned) {
-            if (mission.estado === 'activa') {
-                headerHtml += ` <button id="btn-force-end" style="background:#ff9900; border:none; color:black; padding:5px 10px; border-radius:4px; font-size:0.7rem; cursor:pointer; margin-left:10px;">FINALIZAR</button>`;
+            // Show Delete
+            if (this.dom.btnDeleteMission) this.dom.btnDeleteMission.style.display = 'inline-block';
+
+            // Show Finish if active
+            if (mission.estado === 'activa' && this.dom.btnFinishMission) {
+                this.dom.btnFinishMission.style.display = 'inline-block';
             }
-            headerHtml += ` <button id="btn-delete-mission" style="background:transparent; border:1px solid #ff4444; color:#ff4444; padding:4px 8px; border-radius:4px; font-size:0.7rem; cursor:pointer; margin-left:10px;">ELIMINAR 🗑️</button>`;
         }
-        this.dom.headerTitle.innerHTML = headerHtml;
 
         this.bindMissionActions(mission);
 
@@ -117,31 +144,49 @@ export class MissionsManager {
     }
 
     bindMissionActions(mission) {
-        const btnForce = document.getElementById('btn-force-end');
-        if (btnForce && mission) {
-            btnForce.onclick = async (e) => {
+        console.log("Binding actions for mission:", mission?.id);
+
+        // 1. Finish Button
+        const btnFinish = this.dom.btnFinishMission;
+        console.log("Btn Finish found:", !!btnFinish);
+
+        if (btnFinish && mission) {
+            btnFinish.onclick = async (e) => {
+                console.log("Finish clicked");
                 e.stopPropagation();
-                if (confirm("¿Forzar finalización de esta misión?")) {
-                    btnForce.textContent = "...";
+
+                // Use Custom Confirmation (FINISH / BLUE)
+                if (await this.controller.confirmAction("¿Forzar finalización de esta misión?", 'FINISH')) {
+                    btnFinish.textContent = "...";
                     await api.endMission(mission.id);
                     await this.loadMissions();
+                    btnFinish.textContent = "Finalizar";
                 }
             };
         }
 
-        const btnDeleteMission = document.getElementById('btn-delete-mission');
-        if (btnDeleteMission && mission) {
-            btnDeleteMission.onclick = async (e) => {
+        // 2. Delete Button
+        const btnDelete = this.dom.btnDeleteMission;
+        console.log("Btn Delete found:", !!btnDelete);
+
+        if (btnDelete && mission) {
+            btnDelete.onclick = async (e) => {
+                console.log("Delete clicked");
                 e.stopPropagation();
-                if (confirm(`⚠️ ¿ELIMINAR MISIÓN Y TODOS SUS OBJETOS?\n\nEsta acción no se puede deshacer.`)) {
-                    btnDeleteMission.textContent = "...";
+
+                // Use Custom Confirmation (DELETE / RED)
+                if (await this.controller.confirmAction("⚠️ ¿ELIMINAR MISIÓN Y TODOS SUS OBJETOS?\n\nEsta acción no se puede deshacer.", 'DELETE')) {
+                    btnDelete.textContent = "...";
+                    console.log("Calling api.deleteMission...");
                     const res = await api.deleteMission(mission.id);
+                    console.log("Delete result:", res);
+
                     if (res.success) {
                         await this.loadMissions();
                     } else {
                         alert("Error: " + res.error);
-                        btnDeleteMission.textContent = "Error";
                     }
+                    btnDelete.textContent = "Eliminar";
                 }
             };
         }

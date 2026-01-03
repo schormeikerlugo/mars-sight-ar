@@ -26,7 +26,7 @@ self.onmessage = async (e) => {
     switch (type) {
         case 'INIT':
             console.log("Worker: INIT command received", data);
-            await initModel(data.modelPath, data.wasmPath, data.numThreads);
+            await initModel(data.modelPath, data.wasmPath, data.numThreads, data.executionProviders);
             break;
         case 'DETECT':
             if (!session) {
@@ -38,14 +38,16 @@ self.onmessage = async (e) => {
     }
 };
 
-async function initModel(modelPath, wasmPath, numThreads) {
+async function initModel(modelPath, wasmPath, numThreads, executionProviders = ['wasm']) {
     try {
-        console.log(`Worker: Config WASM Path: ${wasmPath}, Threads: ${numThreads}`);
+        console.log(`Worker: Config WASM Path: ${wasmPath}, Threads: ${numThreads}, Providers: ${executionProviders}`);
+
+        // Configure WASM paths regardless of provider (as backup or main)
         ort.env.wasm.wasmPaths = wasmPath;
         ort.env.wasm.numThreads = numThreads || 2;
-        
+
         const options = {
-            executionProviders: ['wasm'],
+            executionProviders: executionProviders,
             graphOptimizationLevel: 'all'
         };
 
@@ -61,18 +63,18 @@ async function runInference(pixelData) {
         // PixelData is RGBA (416x416) from OffscreenCanvas or Main Thread
         // Convert to Float32 Tensor [1, 3, 416, 416]
         const float32Data = preProcess(pixelData);
-        
+
         const tensor = new ort.Tensor('float32', float32Data, [1, 3, inputSize, inputSize]);
         const feeds = { images: tensor };
-        
+
         // console.log("Worker: Running Session...");
         const results = await session.run(feeds);
         const output = results[session.outputNames[0]];
-        
+
         const predictions = postProcess(output);
-        
+
         self.postMessage({ type: 'RESULT', predictions });
-        
+
     } catch (err) {
         console.error("Worker: Inference Failed", err);
         self.postMessage({ type: 'ERROR', error: err.message });
@@ -82,7 +84,7 @@ async function runInference(pixelData) {
 function preProcess(pixelData) {
     const float32Data = new Float32Array(3 * inputSize * inputSize);
     // pixelData is Uint8ClampedArray [R, G, B, A, R, G, B, A...]
-    
+
     for (let i = 0; i < inputSize * inputSize; i++) {
         // Normalization 0-1
         float32Data[i] = pixelData[i * 4] / 255.0; // R
@@ -97,18 +99,18 @@ function postProcess(output) {
     const shape = output.dims; // [1, 84, 8400]
     const numDetections = shape[2];
     const numClasses = shape[1] - 4;
-    
+
     const boxes = [];
-    
+
     for (let i = 0; i < numDetections; i++) {
         const cx = data[i];
         const cy = data[i + numDetections];
         const w = data[i + 2 * numDetections];
         const h = data[i + 3 * numDetections];
-        
+
         let maxScore = 0;
         let maxClass = 0;
-        
+
         for (let j = 0; j < numClasses; j++) {
             const score = data[i + (j + 4) * numDetections];
             if (score > maxScore) {
@@ -116,7 +118,7 @@ function postProcess(output) {
                 maxClass = j;
             }
         }
-        
+
         if (maxScore > confThreshold) {
             boxes.push({
                 class: classNames[maxClass],
@@ -125,7 +127,7 @@ function postProcess(output) {
             });
         }
     }
-    
+
     return nms(boxes);
 }
 
@@ -133,23 +135,23 @@ function nms(boxes) {
     boxes.sort((a, b) => b.score - a.score);
     const selected = [];
     const active = new Array(boxes.length).fill(true);
-    
+
     for (let i = 0; i < boxes.length; i++) {
         if (!active[i]) continue;
-        
+
         // Convert center to corner for output (Normalized 0-1 or Pixel?)
         // The output of YOLO is relative to inputSize (416).
         // converting here to simpler [x,y,w,h]
         const b = boxes[i];
         const x = b.bbox[0] - b.bbox[2] / 2;
         const y = b.bbox[1] - b.bbox[3] / 2;
-        
+
         selected.push({
             class: b.class,
             score: b.score,
             bbox: [x, y, b.bbox[2], b.bbox[3]]
         });
-        
+
         for (let j = i + 1; j < boxes.length; j++) {
             if (!active[j]) continue;
             if (iou(boxes[i].bbox, boxes[j].bbox) > iouThreshold) {
@@ -163,24 +165,24 @@ function nms(boxes) {
 function iou(boxA, boxB) {
     // box is [cx, cy, w, h]
     // convert to [x1, y1, x2, y2]
-    const x1 = boxA[0] - boxA[2]/2;
-    const y1 = boxA[1] - boxA[3]/2;
-    const x2 = boxA[0] + boxA[2]/2;
-    const y2 = boxA[1] + boxA[3]/2;
-    
-    const x3 = boxB[0] - boxB[2]/2;
-    const y3 = boxB[1] - boxB[3]/2;
-    const x4 = boxB[0] + boxB[2]/2;
-    const y4 = boxB[1] + boxB[3]/2;
-    
+    const x1 = boxA[0] - boxA[2] / 2;
+    const y1 = boxA[1] - boxA[3] / 2;
+    const x2 = boxA[0] + boxA[2] / 2;
+    const y2 = boxA[1] + boxA[3] / 2;
+
+    const x3 = boxB[0] - boxB[2] / 2;
+    const y3 = boxB[1] - boxB[3] / 2;
+    const x4 = boxB[0] + boxB[2] / 2;
+    const y4 = boxB[1] + boxB[3] / 2;
+
     const xA = Math.max(x1, x3);
     const yA = Math.max(y1, y3);
     const xB = Math.min(x2, x4);
     const yB = Math.min(y2, y4);
-    
+
     const interArea = Math.max(0, xB - xA) * Math.max(0, yB - yA);
     const boxAArea = boxA[2] * boxA[3];
     const boxBArea = boxB[2] * boxB[3];
-    
+
     return interArea / (boxAArea + boxBArea - interArea);
 }

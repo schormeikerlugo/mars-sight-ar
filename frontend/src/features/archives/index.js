@@ -10,6 +10,7 @@ import { MissionsManager } from './modules/missions.js';
 import { ObjectsGrid } from './modules/objects-grid.js';
 import { ObjectModal } from './modules/object-modal.js';
 import { TaxonomyFilters } from './modules/taxonomy-filters.js';
+import { ModalSystem } from '../../js/components/ModalSystem.js';
 
 class ArchivesController {
     constructor() {
@@ -28,6 +29,9 @@ class ArchivesController {
             missionList: document.getElementById('mission-list'),
             grid: document.getElementById('evidence-grid'),
             headerTitle: document.getElementById('current-mission-title'),
+            btnFinishMission: document.getElementById('btn-finish-mission'),
+            btnDeleteMission: document.getElementById('btn-delete-mission'),
+
             modal: document.getElementById('detail-modal'),
             btnCloseModal: document.getElementById('btn-close-modal'),
 
@@ -56,6 +60,7 @@ class ArchivesController {
         this.objectsGrid = new ObjectsGrid(this);
         this.objectModal = new ObjectModal(this);
         this.taxonomyFilters = new TaxonomyFilters(this);
+        this.modalSystem = new ModalSystem(); // Init new system
 
         this.init();
     }
@@ -91,13 +96,23 @@ class ArchivesController {
 
         // Delete object
         this.dom.btnDelete.addEventListener('click', async () => {
-            if (this.objectModal.selectedObject && confirm("¿Eliminar este registro permanentemente?")) {
+            if (this.objectModal.selectedObject && await this.confirmAction("¿Eliminar este registro permanentemente?", 'DELETE')) {
                 await this.objectModal.deleteObject();
             }
         });
 
         // Taxonomy filter events
         this.taxonomyFilters.bindFilterEvents();
+    }
+
+    /**
+     * Shows a custom confirmation modal using the system
+     * @param {string} message 
+     * @param {string} type - 'DELETE' | 'FINISH' | 'CONFIRM'
+     * @returns {Promise<boolean>}
+     */
+    confirmAction(message, type = 'DELETE') {
+        return this.modalSystem.confirm(message, type);
     }
 }
 

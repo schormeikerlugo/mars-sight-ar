@@ -1,0 +1,156 @@
+/* ========== CONTENT PANEL ========== */
+.content-panel {
+    background: var(--bg-archives-primary);
+    backdrop-filter: var(--blur-archives);
+    border-radius: var(--radius-archives);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: calc(100vh - 160px);
+    overflow-y: auto;
+
+    /* Hide scrollbar but keep functionality */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+}
+
+.content-panel::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+}
+
+/* Content Header */
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(63, 168, 255, 0.2);
+}
+
+.content-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-family: 'Jura', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-action.finish {
+    background: transparent;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+}
+
+.btn-action.delete {
+    background: transparent;
+    border: 1px solid var(--red);
+    color: var(--red);
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+}
+
+.btn-action.finish:hover {
+    background: rgba(63, 168, 255, 0.15);
+}
+
+.btn-action.delete:hover {
+    background: rgba(255, 68, 68, 0.15);
+}
+
+/* Objects Grid */
+.objects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 18px;
+}
+
+/* Object Card */
+.object-card {
+    background: var(--bg-archives-card-dark);
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.object-card:hover {
+    border-color: var(--cyan);
+    transform: translateY(-5px);
+    box-shadow: var(--cyan-glow);
+}
+
+.object-img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    background: #1a1a2e;
+}
+
+.object-info {
+    padding: 12px;
+}
+
+.object-category {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.object-category.categorizado {
+    color: var(--cyan);
+}
+
+.object-category.sin-categorizar {
+    color: var(--yellow);
+}
+
+.object-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.object-time {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.empty-state {
+    text-align: center;
+    color: #555;
+    padding: 60px 20px;
+    font-size: 1rem;
+}

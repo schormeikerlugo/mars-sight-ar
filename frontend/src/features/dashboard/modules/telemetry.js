@@ -38,4 +38,26 @@ export async function initTelemetry() {
     };
 
     update();
+
+    // Init GPS Check for Status Badge
+    import('../../../js/engines/GPSEngine.js').then(module => {
+        const GPSEngine = module.GPSEngine;
+        const gps = new GPSEngine();
+
+        gps.onPositionUpdate = (pos) => {
+            const el = document.getElementById('dash-gps-status');
+            if (el) {
+                const source = pos.source || 'GPS';
+                el.textContent = `[${source}]`;
+
+                if (source === 'GPS') el.style.color = '#00ff00';
+                else if (source === 'MANUAL') el.style.color = 'orange';
+                else el.style.color = '#ffff00';
+            }
+            // We only need the first fix to know the mode usually, but keep updating is fine
+            // gps.stop(); // Optional: stop if we only want initial status
+        };
+
+        gps.start(); // Will fallback to IP/Manual if needed
+    }).catch(e => console.error("Failed to load GPS for Dashboard", e));
 }

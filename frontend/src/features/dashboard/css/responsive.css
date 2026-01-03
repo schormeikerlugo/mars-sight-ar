@@ -124,7 +124,9 @@
 
     .header-title-group {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
         gap: 2px;
     }
 
@@ -132,9 +134,15 @@
         font-size: 1rem;
     }
 
+    .dash-logo {
+        height: 16px;
+    }
+
     .server-status {
         display: flex;
         font-size: 0.7rem;
+        margin-left: auto;
+        margin-top: 0;
     }
 
     .server-status span:last-child {

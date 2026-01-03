@@ -1,0 +1,26 @@
+:root {
+    --bg-archives-primary: rgba(10, 15, 25, 0.85);
+    --bg-archives-card: rgba(20, 30, 50, 0.6);
+    --bg-archives-card-dark: rgba(10, 15, 25, 0.8);
+    --radius-archives: 20px;
+    --blur-archives: blur(15px);
+    --cyan: #3FA8FF;
+    --cyan-glow: 0 0 20px rgba(63, 168, 255, 0.4);
+    --green: #00d4aa;
+    --yellow: #ffaa00;
+    --red: #ff4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #000;
+    color: white;
+    font-family: 'Jura', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}

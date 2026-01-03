@@ -1,0 +1,78 @@
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+    .archives-main {
+        grid-template-columns: 280px 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .archives-container {
+        padding: 15px;
+    }
+
+    .archives-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .archives-main {
+        grid-template-columns: 1fr;
+    }
+
+    .missions-panel {
+        max-height: 250px;
+    }
+
+    .content-panel {
+        max-height: none;
+    }
+
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .action-buttons {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .objects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+    }
+
+    .modal-body {
+        grid-template-columns: 1fr;
+        max-height: 95vh;
+    }
+
+    .modal-img-container {
+        height: 200px;
+        margin: 15px;
+    }
+
+    .modal-form {
+        padding: 20px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-title {
+        font-size: 1.2rem;
+    }
+
+    .objects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .object-img {
+        height: 100px;
+    }
+}

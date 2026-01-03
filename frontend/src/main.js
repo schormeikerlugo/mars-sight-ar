@@ -1,6 +1,7 @@
 import './css/tokens.css';
 import './css/fonts.css';
 import './css/style.css';
+import './css/holo-logo.css';
 
 console.log("Mars-Sight AR Vanilla: System Initialized");
 
