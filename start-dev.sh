@@ -1,5 +1,5 @@
 #!/bin/bash
-# Mars-Sight AR - Script de Inicio de Desarrollo
+# KEPLER - Script de Inicio de Desarrollo
 # Inicia todos los servicios en el orden correcto
 
 set -e
@@ -8,7 +8,7 @@ PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$PROJECT_DIR"
 
 echo "========================================"
-echo "  🚀 Mars-Sight AR - Iniciando..."
+echo "  🚀 KEPLER System - Iniciando..."
 echo "========================================"
 echo ""
 
@@ -44,7 +44,7 @@ echo ""
 # ========================================
 echo -e "${YELLOW}📦 Paso 1: Iniciando Supabase...${NC}"
 
-# Verificar si los contenedores existen
+# Verificar si los contenedores existen (Manteniendo nombres legacy 'mars-sight-*')
 if docker ps -a --format '{{.Names}}' | grep -q 'mars-sight-db'; then
     docker start mars-sight-db 2>/dev/null || true
     sleep 3
@@ -84,7 +84,7 @@ else
     cd "$PROJECT_DIR/backend"
     
     if [ -f "venv/bin/python" ]; then
-        nohup ./venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload > /tmp/mars-backend.log 2>&1 &
+        nohup ./venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload > /tmp/kepler-backend.log 2>&1 &
         BACKEND_PID=$!
         echo "   Backend PID: $BACKEND_PID"
         sleep 2
@@ -92,7 +92,7 @@ else
         if kill -0 $BACKEND_PID 2>/dev/null; then
             echo -e "${GREEN}   ✅ Backend iniciado${NC}"
         else
-            echo -e "${RED}   ❌ Error al iniciar backend. Ver: /tmp/mars-backend.log${NC}"
+            echo -e "${RED}   ❌ Error al iniciar backend. Ver: /tmp/kepler-backend.log${NC}"
         fi
     else
         echo -e "${RED}   ❌ Virtual env no encontrado. Ejecuta:${NC}"
@@ -116,7 +116,7 @@ else
     cd "$PROJECT_DIR/frontend"
     
     if [ -d "node_modules" ]; then
-        nohup npm run dev > /tmp/mars-frontend.log 2>&1 &
+        nohup npm run dev > /tmp/kepler-frontend.log 2>&1 &
         FRONTEND_PID=$!
         echo "   Frontend PID: $FRONTEND_PID"
         sleep 3
@@ -124,7 +124,7 @@ else
         if kill -0 $FRONTEND_PID 2>/dev/null; then
             echo -e "${GREEN}   ✅ Frontend iniciado${NC}"
         else
-            echo -e "${RED}   ❌ Error al iniciar frontend. Ver: /tmp/mars-frontend.log${NC}"
+            echo -e "${RED}   ❌ Error al iniciar frontend. Ver: /tmp/kepler-frontend.log${NC}"
         fi
     else
         echo -e "${RED}   ❌ node_modules no encontrado. Ejecuta:${NC}"
@@ -143,17 +143,17 @@ echo "========================================"
 echo -e "${GREEN}  ✅ ¡Todo iniciado correctamente!${NC}"
 echo "========================================"
 echo ""
-echo "  Servicios disponibles:"
+echo "  Servicios KEPLER disponibles:"
 echo "  ─────────────────────────────────────"
 echo "  🌐 Frontend:     https://localhost:5180"
 echo "  🐍 Backend API:  http://localhost:8001"
 echo "  📦 Supabase:     http://localhost:54321"
 echo "  🗄️  Database:     localhost:54322"
 echo ""
-echo "  Logs:"
+echo "  logs:"
 echo "  ─────────────────────────────────────"
-echo "  Backend:  tail -f /tmp/mars-backend.log"
-echo "  Frontend: tail -f /tmp/mars-frontend.log"
+echo "  Backend:  tail -f /tmp/kepler-backend.log"
+echo "  Frontend: tail -f /tmp/kepler-frontend.log"
 echo "  Docker:   docker-compose logs -f"
 echo ""
 echo "  Para detener todo: ./stop-dev.sh"

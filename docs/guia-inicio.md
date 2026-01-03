@@ -28,7 +28,7 @@ Esta guía explica cómo iniciar todos los servicios del proyecto para desarroll
 
 ### Iniciar todo:
 ```bash
-cd "/home/lenovics/portafolio Dev/Mars‑Sight AR"
+cd "/home/lenovics/portafolio Dev/KEPLER"
 ./start-dev.sh
 ```
 
@@ -44,7 +44,7 @@ cd "/home/lenovics/portafolio Dev/Mars‑Sight AR"
 ### Paso 1: Iniciar Supabase
 
 ```bash
-cd "/home/lenovics/portafolio Dev/Mars‑Sight AR"
+cd "/home/lenovics/portafolio Dev/KEPLER"
 
 # Iniciar servicios principales
 docker start mars-sight-db mars-sight-auth mars-sight-rest mars-sight-kong

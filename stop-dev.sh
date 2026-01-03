@@ -1,9 +1,9 @@
 #!/bin/bash
-# Mars-Sight AR - Script para Detener Desarrollo
+# KEPLER - Script para Detener Desarrollo
 # Detiene todos los servicios
 
 echo "========================================"
-echo "  🛑 Mars-Sight AR - Deteniendo..."
+echo "  🛑 KEPLER System - Deteniendo..."
 echo "========================================"
 echo ""
 
@@ -18,6 +18,7 @@ pkill -f "uvicorn app.main:app" 2>/dev/null || true
 
 # Detener Supabase
 echo "📦 Deteniendo Supabase..."
+# Manteniendo referencias a contenedores legacy
 docker stop mars-sight-kong mars-sight-rest mars-sight-auth mars-sight-storage mars-sight-meta mars-sight-studio mars-sight-db 2>/dev/null || true
 
 echo ""

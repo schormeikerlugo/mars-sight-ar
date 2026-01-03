@@ -24,9 +24,9 @@ export const api = {
             const token = await auth.getToken();
             const res = await fetch(`${API_BASE}/chat/`, {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` 
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ message, context, chat_id: chatId })
             });
@@ -45,17 +45,17 @@ export const api = {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             return await res.json();
-        } catch(e) { return []; }
+        } catch (e) { return []; }
     },
 
     async loadChat(id) {
-         try {
+        try {
             const token = await auth.getToken();
             const res = await fetch(`${API_BASE}/chat/history/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             return await res.json();
-        } catch(e) { return null; }
+        } catch (e) { return null; }
     },
 
     async updateChatTitle(chatId, newTitle) {
@@ -78,14 +78,14 @@ export const api = {
     },
 
     async deleteChat(id) {
-         try {
+        try {
             const token = await auth.getToken();
             await fetch(`${API_BASE}/chat/history/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             return true;
-        } catch(e) { return false; }
+        } catch (e) { return false; }
     },
 
     // --- TELEMETRY ---
@@ -106,14 +106,14 @@ export const api = {
             const token = await auth.getToken();
             const res = await fetch(`${API_BASE}/missions/start`, {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(data)
             });
             return await res.json();
-        } catch(e) { console.error(e); return { success: false }; }
+        } catch (e) { console.error(e); return { success: false }; }
     },
 
     async endMission(missionId) {
@@ -121,14 +121,14 @@ export const api = {
             const token = await auth.getToken();
             await fetch(`${API_BASE}/missions/end`, {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ mission_id: missionId })
             });
             return { success: true };
-        } catch(e) { return { success: false }; }
+        } catch (e) { return { success: false }; }
     },
 
     async deleteMission(missionId) {
@@ -139,7 +139,7 @@ export const api = {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             return await res.json();
-        } catch(e) { return { success: false, error: e.message }; }
+        } catch (e) { return { success: false, error: e.message }; }
     },
 
     // --- UNIFIED OBJECT CREATION ---
@@ -150,7 +150,7 @@ export const api = {
             const token = await auth.getToken();
             const res = await fetch(`${API_BASE}/objects/create`, {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
@@ -159,8 +159,8 @@ export const api = {
             if (!res.ok) throw new Error('Object Create failed');
             return await res.json();
         } catch (err) {
-             console.error("Object Sync Error:", err);
-             return { success: false, error: err.message };
+            console.error("Object Sync Error:", err);
+            return { success: false, error: err.message };
         }
     },
 
@@ -169,23 +169,23 @@ export const api = {
         try {
             const token = await auth.getToken();
             const res = await fetch(`${API_BASE}/missions/list`, {
-                 headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${token}` }
             });
             return await res.json();
-        } catch(e) { return []; }
+        } catch (e) { return []; }
     },
 
     async getMissionObjects(missionId) {
         try {
             const token = await auth.getToken();
             const res = await fetch(`${API_BASE}/missions/${missionId}/objects?t=${Date.now()}`, {
-                 headers: { 
+                headers: {
                     'Authorization': `Bearer ${token}`,
                     'Cache-Control': 'no-cache'
-                 }
+                }
             });
             return await res.json();
-        } catch(e) { return []; }
+        } catch (e) { return []; }
     },
 
     async getOrphanedObjects() {
@@ -193,13 +193,13 @@ export const api = {
             const token = await auth.getToken();
             // Add timestamp to prevent browser caching
             const res = await fetch(`${API_BASE}/missions/orphaned/objects?t=${Date.now()}`, {
-                 headers: { 
+                headers: {
                     'Authorization': `Bearer ${token}`,
                     'Cache-Control': 'no-cache'
-                 }
+                }
             });
             return await res.json();
-        } catch(e) { return []; }
+        } catch (e) { return []; }
     },
 
     async updateObject(id, data) {
@@ -207,7 +207,7 @@ export const api = {
             const token = await auth.getToken();
             const res = await fetch(`${API_BASE}/objects/${id}`, {
                 method: 'PUT',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
@@ -219,9 +219,9 @@ export const api = {
                 return false;
             }
             return true;
-        } catch(e) { 
+        } catch (e) {
             console.error(e);
-            return false; 
+            return false;
         }
     },
 
@@ -234,9 +234,9 @@ export const api = {
             });
             if (!res.ok) return false;
             return true;
-        } catch(e) { return false; }
+        } catch (e) { return false; }
     },
-    
+
     async getNearbyObjects(lat, lng, radius = 500) {
         try {
             const token = await auth.getToken();
@@ -245,9 +245,9 @@ export const api = {
             });
             if (!res.ok) throw new Error("Fetch failed");
             return await res.json();
-        } catch(e) { 
+        } catch (e) {
             console.error(e);
-            return []; 
+            return [];
         }
     }
 };

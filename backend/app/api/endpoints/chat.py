@@ -19,6 +19,12 @@ def get_supabase() -> Client:
         return None
     return create_client(url, key)
 
+# --- OLLAMA INIT ---
+# Set OLLAMA_HOST environment variable if not already set, for ollama client to pick up
+OLLAMA_API_URL = os.getenv("OLLAMA_HOST", "http://127.0.0.1:11434")
+os.environ["OLLAMA_HOST"] = OLLAMA_API_URL
+print(f"DEBUG: Using OLLAMA_HOST='{OLLAMA_API_URL}'")
+
 # --- MODELS ---
 class ChatRequest(BaseModel):
     message: str
@@ -186,7 +192,8 @@ async def chat_with_llama(
 
     try:
         # 3. Inference
-        response = ollama.chat(model='llama3:8b-instruct-q6_K', messages=messages)
+        client = ollama.AsyncClient(host=OLLAMA_API_URL)
+        response = await client.chat(model='llama3:8b-instruct-q6_K', messages=messages)
         ai_text = response['message']['content']
         
         # 4. Save to DB (Background-like)
