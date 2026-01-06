@@ -5,7 +5,7 @@ export const api = {
     // --- DASHBOARD ---
     async getDashboardStats() {
         try {
-            const res = await fetch(`${API_BASE}/dashboard/stats`);
+            const res = await fetch(`${API_BASE}/dashboard/stats?t=${Date.now()}`);
             if (!res.ok) throw new Error('Failed to fetch stats');
             return await res.json();
         } catch (err) {
@@ -16,6 +16,41 @@ export const api = {
                 recent: { pois: [], minerals: [], missions: [], objects: [] }
             };
         }
+    },
+
+    // --- SERVICE HEALTH ---
+    async getHealth() {
+        const status = {
+            backend: false,
+            database: false,
+            ai: false
+        };
+        try {
+            const res = await fetch(`${API_BASE}/dashboard/stats?t=${Date.now()}`);
+            if (res.ok) {
+                status.backend = true;
+                status.database = true; // If stats load, DB is connected
+            }
+            // Check AI (Ollama) - ping with auth token
+            try {
+                const token = await auth.getToken();
+                const aiRes = await fetch(`${API_BASE}/chat/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ message: 'status', context: '' })
+                });
+                status.ai = aiRes && aiRes.ok;
+            } catch (aiErr) {
+                console.warn('AI check failed:', aiErr);
+                status.ai = false;
+            }
+        } catch (e) {
+            console.warn('Health check failed:', e);
+        }
+        return status;
     },
 
     // --- CHAT ---
@@ -168,7 +203,7 @@ export const api = {
     async getMissions() {
         try {
             const token = await auth.getToken();
-            const res = await fetch(`${API_BASE}/missions/list`, {
+            const res = await fetch(`${API_BASE}/missions/list?t=${Date.now()}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             return await res.json();

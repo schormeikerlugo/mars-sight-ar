@@ -21,6 +21,7 @@ export default defineConfig({
       '/supabase': {
         target: 'http://127.0.0.1:54321',
         changeOrigin: true,
+        ws: true, // Habilitar soporte para WebSockets (Realtime)
         rewrite: (path) => path.replace(/^\/supabase/, ''),
       }
     }

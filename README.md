@@ -41,6 +41,39 @@
 | 📊 **Dashboard** | ✅ Activo | Telemetría vital y gestión de misiones. |
 | 🔐 **Access** | ✅ Activo | Autenticación biométrica simulada (Supabase Auth). |
 | 📂 **Archives** | ✅ Activo | Base de datos vectorial de hallazgos. |
+| 🔔 **Realtime Notifications** | ✅ Activo | Alertas en tiempo real vía WebSocket (Supabase Realtime). |
+
+---
+
+## 🔔 Sistema de Notificaciones
+
+KEPLER incluye un sistema de notificaciones en tiempo real para mantener a los usuarios informados de eventos del sistema:
+
+### Características:
+- **Notificaciones Globales**: Funcionan en todas las secciones (Dashboard, Archivos, Taxonomía, AR).
+- **Persistencia**: Historial guardado en localStorage (30 días de retención).
+- **Timeline (Bitácora)**: Notificaciones agrupadas por día (Hoy, Ayer, fechas anteriores).
+- **Atribución de Usuario**: Cada notificación muestra quién realizó la acción (`👤 por [usuario]`).
+- **Borrado Flexible**: Eliminar notificaciones individuales o por día completo.
+- **Estado del Sistema**: Al iniciar sesión, muestra el estado de Backend, Base de Datos e IA.
+
+### Tipos de Notificaciones:
+| Tipo | Icono | Duración |
+|------|-------|----------|
+| **Critical** | 🚨 | Persistente (requiere cierre manual) |
+| **Warning** | ⚠️ | 7 segundos |
+| **Success** | ✅ | 4 segundos |
+| **Info** | ℹ️ | 5 segundos |
+
+### Eventos Realtime Monitoreados:
+- 📡 Nueva misión creada
+- 🚀 Misión activada
+- ✅ Misión completada (con estadísticas detalladas)
+- ⚠️ Misión eliminada
+
+### Acceso a la Bitácora:
+- **Desktop**: Clic en el ícono de campana 🔔 en el header
+- **Mobile**: Menú hamburguesa → "🔔 Notificaciones"
 
 ---
 
@@ -52,6 +85,7 @@ La documentación ha sido reorganizada para facilitar el desarrollo:
 *   **[⚙️ Backend & AI Services](docs/backend.md)**: FastAPI, Python, Llama 3, CLIP.
 *   **[⚡ Database & Cloud](docs/supabase.md)**: Esquema PostgreSQL, Auth, Vector Search.
 *   **[🧠 Hybrid AI System](docs/ia.md)**: Detalles sobre la integración Edge-Cloud AI.
+*   **[🔔 Realtime & Notificaciones](docs/realtime.md)**: WebSocket, Alertas, Bitácora.
 
 ---
 

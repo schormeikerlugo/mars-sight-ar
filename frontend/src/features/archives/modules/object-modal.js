@@ -158,6 +158,9 @@ export class ObjectModal {
             this.controller.currentObjects = this.controller.currentObjects.filter(
                 o => o.id !== this.selectedObject.id
             );
+            this.controller.filteredObjects = this.controller.filteredObjects.filter(
+                o => o.id !== this.selectedObject.id
+            );
             this.controller.objectsGrid.renderGrid();
             this.closeModal();
         } else {

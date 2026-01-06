@@ -11,7 +11,11 @@ RUN apt-get update && apt-get install -y \
 # Copiar requirements
 COPY requirements.txt .
 
-# Instalar dependencias Python
+# Instalar PyTorch CPU-only (Mucho más ligero y rápido)
+# Se instala ANTES de requirements.txt para que sentence-transformers lo detecte
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+
+# Instalar resto de dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar código de la aplicación

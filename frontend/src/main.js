@@ -2,12 +2,18 @@ import './css/tokens.css';
 import './css/fonts.css';
 import './css/style.css';
 import './css/holo-logo.css';
+import './css/notifications.css';
 
-console.log("Mars-Sight AR Vanilla: System Initialized");
+import { NotificationSystem } from './js/components/NotificationSystem.js';
+
+// Initialize Global Notification System
+window.kepler = window.kepler || {};
+window.kepler.notify = new NotificationSystem();
+
+console.log("KEPLER System: Initialized");
 
 import { auth } from './js/auth.js';
-
-console.log("Mars-Sight AR Vanilla: System Initialized");
+import { RealtimeService } from './js/services/RealtimeService.js';
 
 async function route() {
     const user = await auth.getUser();
@@ -24,6 +30,12 @@ async function route() {
     if (user && path === '/login') {
         window.location.href = '/';
         return;
+    }
+
+    // Start Realtime Listener for authenticated users (persists across all pages)
+    if (user && !window.kepler.realtime) {
+        window.kepler.realtime = new RealtimeService();
+        console.log("KEPLER: Realtime service started globally");
     }
 
     // Routing

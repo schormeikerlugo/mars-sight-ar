@@ -19,7 +19,7 @@ pkill -f "uvicorn app.main:app" 2>/dev/null || true
 # Detener Supabase
 echo "📦 Deteniendo Supabase..."
 # Manteniendo referencias a contenedores legacy
-docker stop mars-sight-kong mars-sight-rest mars-sight-auth mars-sight-storage mars-sight-meta mars-sight-studio mars-sight-db 2>/dev/null || true
+docker stop mars-sight-kong mars-sight-rest mars-sight-auth mars-sight-storage mars-sight-meta mars-sight-studio realtime-dev.supabase-realtime mars-sight-db 2>/dev/null || true
 
 echo ""
 echo "✅ Todos los servicios detenidos"

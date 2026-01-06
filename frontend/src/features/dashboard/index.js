@@ -25,6 +25,44 @@ export async function render(container) {
     // Inject template
     container.innerHTML = template;
 
+    // Bind Notification Bell
+    const btnBell = document.getElementById('btn-notifications-header');
+    if (btnBell) {
+        btnBell.onclick = () => {
+            if (window.kepler && window.kepler.notify) {
+                window.kepler.notify.toggleLog();
+            }
+        };
+    }
+
+    // Service Status Check (Only on session start - first dashboard load)
+    if (window.kepler && window.kepler.notify) {
+        if (!sessionStorage.getItem('kepler_status_shown')) {
+            setTimeout(async () => {
+                // Import api dynamically to avoid circular deps
+                const { api } = await import('../../js/services/api.js');
+                const health = await api.getHealth();
+
+                // Build status message
+                const statuses = [
+                    `Backend: ${health.backend ? '✅' : '❌'}`,
+                    `Base de Datos: ${health.database ? '✅' : '❌'}`,
+                    `IA (Llama): ${health.ai ? '✅' : '❌'}`
+                ];
+
+                const allGood = health.backend && health.database;
+
+                if (allGood) {
+                    window.kepler.notify.success(`Sistemas operativos\n${statuses.join(' | ')}`);
+                } else {
+                    window.kepler.notify.warning(`Algunos sistemas no responden\n${statuses.join(' | ')}`);
+                }
+
+                sessionStorage.setItem('kepler_status_shown', 'true');
+            }, 1500);
+        }
+    }
+
     // Update user profile in header
     if (user) {
         const nameEl = document.getElementById('user-name');

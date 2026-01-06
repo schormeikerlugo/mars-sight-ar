@@ -64,3 +64,14 @@ services:
           - /pg/
     plugins:
       - name: cors
+
+  ## Realtime
+  - name: realtime
+    url: http://realtime:4000/socket/
+    routes:
+      - name: realtime-route
+        strip_path: true
+        paths:
+          - /realtime/v1/
+    plugins:
+      - name: cors

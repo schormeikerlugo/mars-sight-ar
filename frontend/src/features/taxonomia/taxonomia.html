@@ -10,6 +10,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Jura:wght@400;500;600;700&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="../../css/notifications.css">
   <link rel="stylesheet" href="./taxonomia.css">
 </head>
 
@@ -164,7 +165,18 @@
   </div>
 
   <script type="module">
+    import { NotificationSystem } from '../../js/components/NotificationSystem.js';
+    import { RealtimeService } from '../../js/services/RealtimeService.js';
     import TaxonomiaController from './index.js';
+
+    // Initialize Global Notification System
+    window.kepler = window.kepler || {};
+    if (!window.kepler.notify) {
+      window.kepler.notify = new NotificationSystem();
+    }
+    if (!window.kepler.realtime) {
+      window.kepler.realtime = new RealtimeService();
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
       const container = document.getElementById('taxonomia-app');

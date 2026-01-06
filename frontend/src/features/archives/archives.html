@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../../css/reset.css">
     <link rel="stylesheet" href="../../css/tokens.css">
     <link rel="stylesheet" href="../../css/global.css">
+    <link rel="stylesheet" href="../../css/notifications.css">
     <link rel="stylesheet" href="./archives.css">
 </head>
 
@@ -129,6 +130,20 @@
 
     <!-- Dynamic Confirmation Modal injected by ModalSystem.js -->
 
+    <!-- Initialize Global Systems -->
+    <script type="module">
+        import { NotificationSystem } from '../../js/components/NotificationSystem.js';
+        import { RealtimeService } from '../../js/services/RealtimeService.js';
+
+        // Initialize Global Notification System
+        window.kepler = window.kepler || {};
+        if (!window.kepler.notify) {
+            window.kepler.notify = new NotificationSystem();
+        }
+        if (!window.kepler.realtime) {
+            window.kepler.realtime = new RealtimeService();
+        }
+    </script>
     <script type="module" src="./index.js"></script>
 </body>
 

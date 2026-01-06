@@ -48,7 +48,7 @@ echo -e "${YELLOW}📦 Paso 1: Iniciando Supabase...${NC}"
 if docker ps -a --format '{{.Names}}' | grep -q 'mars-sight-db'; then
     docker start mars-sight-db 2>/dev/null || true
     sleep 3
-    docker start mars-sight-auth mars-sight-rest mars-sight-kong 2>/dev/null || true
+    docker start mars-sight-auth mars-sight-rest mars-sight-kong realtime-dev.supabase-realtime 2>/dev/null || true
     
     # Esperar a que la DB esté lista
     echo "   Esperando base de datos..."

@@ -21,7 +21,8 @@ def get_supabase() -> Client:
 
 # --- OLLAMA INIT ---
 # Set OLLAMA_HOST environment variable if not already set, for ollama client to pick up
-OLLAMA_API_URL = os.getenv("OLLAMA_HOST", "http://127.0.0.1:11434")
+# Prefer OLLAMA_URL to match .env, fallback to OLLAMA_HOST, then default
+OLLAMA_API_URL = os.getenv("OLLAMA_URL") or os.getenv("OLLAMA_HOST", "http://127.0.0.1:11434")
 os.environ["OLLAMA_HOST"] = OLLAMA_API_URL
 print(f"DEBUG: Using OLLAMA_HOST='{OLLAMA_API_URL}'")
 

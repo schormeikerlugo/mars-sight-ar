@@ -80,4 +80,15 @@ export function initMobileMenu(user, missionModal) {
             window.location.href = '/';
         });
     }
+
+    // Mobile notifications button - toggle Bitácora
+    const mobileBtnNotifications = document.getElementById('mobile-btn-notifications');
+    if (mobileBtnNotifications) {
+        mobileBtnNotifications.addEventListener('click', () => {
+            closeMobileMenu();
+            if (window.kepler && window.kepler.notify) {
+                window.kepler.notify.toggleLog();
+            }
+        });
+    }
 }
