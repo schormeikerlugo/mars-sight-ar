@@ -45,7 +45,19 @@ export class ModalSystem {
 
         const modalHtml = `
             ${styles}
-            <div class="modal-overlay sys-modal-overlay" id="${this.modalId}" style="display:none; align-items:center; justify-content:center; z-index:9999; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);">
+            <div class="modal-overlay sys-modal-overlay" id="${this.modalId}" style="
+                display:none; 
+                position:fixed; 
+                top:0; 
+                left:0; 
+                width:100%; 
+                height:100%; 
+                align-items:center; 
+                justify-content:center; 
+                z-index:20000; 
+                background: rgba(0, 0, 0, 0.7); 
+                backdrop-filter: blur(5px);
+            ">
                 <div class="system-modal-body sys-modal-content" style="
                     background: rgba(10, 15, 25, 0.95);
                     border-radius: 20px;
@@ -248,3 +260,6 @@ export class ModalSystem {
         }
     }
 }
+
+// Singleton instance for shared usage
+export const modalSystem = new ModalSystem();

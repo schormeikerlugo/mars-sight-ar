@@ -79,3 +79,4 @@ temp/
 # Compiled files
 *.pyc
 
+.docker-data/

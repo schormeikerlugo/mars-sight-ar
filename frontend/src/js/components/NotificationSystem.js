@@ -3,12 +3,14 @@
  * Handles holographic HUD alerts, audio feedback, and persistent history.
  */
 import { notificationStore } from '../services/NotificationStore.js';
+import { modalSystem } from './ModalSystem.js';
 
 export class NotificationSystem {
     constructor() {
         this.container = null;
         this.logPanel = null;
         this.sounds = {};
+        this.currentFilter = 'all'; // Filter state: 'all', 'critical', 'warning', 'success', 'info'
 
         this.init();
     }
@@ -30,6 +32,23 @@ export class NotificationSystem {
                     <button class="log-close">×</button>
                 </div>
             </div>
+            <div class="log-filters" id="log-filters">
+                <button class="filter-tab active" data-filter="all">
+                    📋 Todos <span class="filter-count" id="count-all">0</span>
+                </button>
+                <button class="filter-tab critical" data-filter="critical">
+                    ⚠️ Crítico <span class="filter-count" id="count-critical">0</span>
+                </button>
+                <button class="filter-tab warning" data-filter="warning">
+                    ⚡ Alerta <span class="filter-count" id="count-warning">0</span>
+                </button>
+                <button class="filter-tab success" data-filter="success">
+                    ✅ Éxito <span class="filter-count" id="count-success">0</span>
+                </button>
+                <button class="filter-tab info" data-filter="info">
+                    ℹ️ Info <span class="filter-count" id="count-info">0</span>
+                </button>
+            </div>
             <div class="log-content" id="log-content"></div>
         `;
         document.body.appendChild(this.logPanel);
@@ -38,12 +57,22 @@ export class NotificationSystem {
         this.logPanel.querySelector('.log-close').onclick = () => this.toggleLog(false);
 
         // Bind Clear All
-        this.logPanel.querySelector('.log-clear-all').onclick = () => {
-            if (confirm('¿Borrar toda la bitácora?')) {
-                notificationStore.clearAll();
-                this.updateLogUI();
+        this.logPanel.querySelector('.log-clear-all').onclick = async () => {
+            try {
+                const confirmed = await modalSystem.confirm('¿Borrar toda la bitácora del sistema?', 'DELETE');
+                if (confirmed) {
+                    notificationStore.clearAll();
+                    this.updateLogUI();
+                }
+            } catch (e) {
+                console.error('Modal error:', e);
             }
         };
+
+        // Bind Filter Tabs
+        this.logPanel.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.onclick = () => this.setFilter(tab.dataset.filter);
+        });
 
         // 3. Preload Sounds
         const audioPath = '/assets/song/notifications/';
@@ -115,6 +144,20 @@ export class NotificationSystem {
         return id;
     }
 
+    setFilter(filter) {
+        this.currentFilter = filter;
+
+        // Update active tab styling
+        this.logPanel.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.dataset.filter === filter) {
+                tab.classList.add('active');
+            }
+        });
+
+        this.updateLogUI();
+    }
+
     toggleLog(forceState = null) {
         const isOpen = this.logPanel.classList.contains('open');
         const newState = forceState !== null ? forceState : !isOpen;
@@ -133,17 +176,42 @@ export class NotificationSystem {
 
         const sortedDates = notificationStore.getSortedDates();
         const grouped = notificationStore.getGroupedByDate();
+        const allNotifications = notificationStore.getAll();
+
+        // Update filter counts
+        const counts = { all: 0, critical: 0, warning: 0, success: 0, info: 0 };
+        allNotifications.forEach(n => {
+            counts.all++;
+            if (counts[n.type] !== undefined) counts[n.type]++;
+        });
+
+        Object.keys(counts).forEach(type => {
+            const countEl = this.logPanel.querySelector(`#count-${type}`);
+            if (countEl) countEl.textContent = counts[type];
+        });
+
+        // Check if empty after filters
+        let hasVisibleItems = false;
 
         if (sortedDates.length === 0) {
             content.innerHTML = '<div class="empty-log">Sin registros recientes</div>';
             return;
         }
 
-        // Build timeline HTML
+        // Build timeline HTML with filter applied
         let html = '';
         for (const date of sortedDates) {
             const dateLabel = this.formatDateLabel(date);
-            const notifications = grouped[date];
+            let notifications = grouped[date];
+
+            // Apply filter
+            if (this.currentFilter !== 'all') {
+                notifications = notifications.filter(n => n.type === this.currentFilter);
+            }
+
+            // Skip empty groups
+            if (notifications.length === 0) continue;
+            hasVisibleItems = true;
 
             html += `
                 <div class="log-date-group">
@@ -174,25 +242,44 @@ export class NotificationSystem {
             `;
         }
 
+        if (!hasVisibleItems) {
+            html = `<div class="empty-log">Sin registros de tipo "${this.currentFilter}"</div>`;
+        }
+
         content.innerHTML = html;
 
         // Bind delete handlers
         content.querySelectorAll('.log-date-delete').forEach(btn => {
-            btn.onclick = (e) => {
+            btn.onclick = async (e) => {
                 e.stopPropagation();
                 const date = btn.dataset.date;
-                if (confirm(`¿Borrar todos los registros del ${this.formatDateLabel(date)}?`)) {
-                    notificationStore.deleteByDate(date);
-                    this.updateLogUI();
+                try {
+                    const confirmed = await modalSystem.confirm(
+                        `¿Borrar todos los registros del ${this.formatDateLabel(date)}?`,
+                        'DELETE'
+                    );
+                    if (confirmed) {
+                        notificationStore.deleteByDate(date);
+                        this.updateLogUI();
+                    }
+                } catch (err) {
+                    console.error('Delete date modal error:', err);
                 }
             };
         });
 
         content.querySelectorAll('.log-item-delete').forEach(btn => {
-            btn.onclick = (e) => {
+            btn.onclick = async (e) => {
                 e.stopPropagation();
-                notificationStore.deleteById(btn.dataset.id);
-                this.updateLogUI();
+                try {
+                    const confirmed = await modalSystem.confirm('¿Eliminar esta notificación?', 'DELETE');
+                    if (confirmed) {
+                        notificationStore.deleteById(btn.dataset.id);
+                        this.updateLogUI();
+                    }
+                } catch (err) {
+                    console.error('Delete item modal error:', err);
+                }
             };
         });
     }

@@ -15,7 +15,7 @@ services:
       POSTGRES_PASSWORD: mars2025
       JWT_SECRET: 55a6dca744ee4e41c5c59be899a1fd185fb12c76b8eecc232ccd8cf6babed5d5
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./.docker-data/postgres:/var/lib/postgresql/data
     networks:
       mars-network:
         aliases:
@@ -130,7 +130,7 @@ services:
       AUTH_JWT_SECRET: 55a6dca744ee4e41c5c59be899a1fd185fb12c76b8eecc232ccd8cf6babed5d5
       AUTH_JWT_ALGORITHM: HS256
     volumes:
-      - storage_data:/var/lib/storage
+      - ./.docker-data/storage:/var/lib/storage
     networks:
       - mars-network
 
@@ -252,7 +252,7 @@ services:
     ports:
       - "11434:11434"
     volumes:
-      - ollama_data:/root/.ollama
+      - ./.docker-data/ollama:/root/.ollama
     networks:
       - mars-network
 
@@ -275,14 +275,7 @@ services:
       - VITE_SUPABASE_URL=http://localhost:54321
       - VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzY3MDIyNTc1LCJleHAiOjQ5MjA2MjI1NzV9.ar9_aoOo-Cd7VVibO00kL0qCTa3lGh0IRmoFPmstrq8
 
-volumes:
-  postgres_data:
-    external: true
-    name: marssightar_postgres_data
-  storage_data:
-    external: true
-    name: marssightar_storage_data
-  ollama_data:
+# Volumes are now bind mounts in .docker-data/
 
 
 networks:

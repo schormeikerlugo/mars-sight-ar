@@ -63,15 +63,56 @@ export async function render(container) {
         }
     }
 
-    // Update user profile in header
+    // Update user profile in header using ProfileService
     if (user) {
+        // Import profile service
+        const { profileService } = await import('../../js/services/ProfileService.js');
+
+        const profile = await profileService.getProfile(true); // Force refresh on dashboard load
+        const avatarDisplay = await profileService.getAvatarDisplay();
+
         const nameEl = document.getElementById('user-name');
         const avatarEl = document.getElementById('user-avatar');
         const dropdownEmail = document.getElementById('dropdown-email');
+        const mobileNameEl = document.getElementById('mobile-user-name');
+        const mobileEmailEl = document.getElementById('mobile-user-email');
+        const mobileAvatarEl = document.getElementById('mobile-user-avatar');
 
-        if (nameEl) nameEl.textContent = user.email.split('@')[0];
-        if (avatarEl) avatarEl.textContent = user.email[0].toUpperCase();
+        const displayName = profile?.display_name || user.email.split('@')[0];
+
+        // Desktop header
+        if (nameEl) nameEl.textContent = displayName;
         if (dropdownEmail) dropdownEmail.textContent = user.email;
+
+        // Mobile menu
+        if (mobileNameEl) mobileNameEl.textContent = displayName;
+        if (mobileEmailEl) mobileEmailEl.textContent = user.email;
+
+        // Avatar (supports image, emoji, or letter)
+        if (avatarEl) {
+            if (avatarDisplay.type === 'image') {
+                avatarEl.textContent = '';
+                avatarEl.style.backgroundImage = `url(${avatarDisplay.value})`;
+                avatarEl.style.backgroundSize = 'cover';
+                avatarEl.style.backgroundPosition = 'center';
+            } else {
+                avatarEl.textContent = avatarDisplay.value;
+                avatarEl.style.backgroundImage = 'none';
+            }
+        }
+
+        // Mobile avatar
+        if (mobileAvatarEl) {
+            if (avatarDisplay.type === 'image') {
+                mobileAvatarEl.textContent = '';
+                mobileAvatarEl.style.backgroundImage = `url(${avatarDisplay.value})`;
+                mobileAvatarEl.style.backgroundSize = 'cover';
+                mobileAvatarEl.style.backgroundPosition = 'center';
+            } else {
+                mobileAvatarEl.textContent = avatarDisplay.value;
+                mobileAvatarEl.style.backgroundImage = 'none';
+            }
+        }
     }
 
     // Setup profile dropdown
@@ -113,6 +154,14 @@ function setupProfileDropdown() {
         logoutBtn.addEventListener('click', async () => {
             await auth.logout();
             window.location.href = '/';
+        });
+    }
+
+    // Profile button handler (navigate to profile page)
+    const myProfileBtn = document.getElementById('btn-profile');
+    if (myProfileBtn) {
+        myProfileBtn.addEventListener('click', () => {
+            window.location.href = '/profile';
         });
     }
 }

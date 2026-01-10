@@ -1,0 +1,102 @@
+<div class="profile-container">
+    <!-- Header -->
+    <header class="profile-header">
+        <button id="btn-back" class="btn-back">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            <span>Volver</span>
+        </button>
+        <h1 class="profile-title">Mi Perfil</h1>
+        <div class="header-spacer"></div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="profile-main">
+        <!-- Profile Card -->
+        <section class="profile-card glass-panel">
+            <div class="profile-avatar-section">
+                <div class="profile-avatar-large">
+                    <span id="profile-avatar-letter">S</span>
+                </div>
+                <button class="btn-change-avatar">Cambiar Avatar</button>
+            </div>
+
+            <div class="profile-info">
+                <h2 id="profile-display-name" class="display-name">Usuario</h2>
+                <p id="profile-email" class="profile-email">user@email.com</p>
+                <div class="profile-badge">
+                    <span class="badge explorador">🚀 Explorador</span>
+                </div>
+                <p class="member-since">Miembro desde: <span id="profile-member-since">--</span></p>
+            </div>
+        </section>
+
+        <!-- Edit Form -->
+        <section class="profile-form-section glass-panel">
+            <h3 class="section-title">Información Personal</h3>
+
+            <form id="profile-form" class="profile-form">
+                <div class="form-group">
+                    <label for="inp-display-name">Nombre de Usuario</label>
+                    <input type="text" id="inp-display-name" placeholder="Tu nombre de usuario" />
+                </div>
+
+                <div class="form-group">
+                    <label for="inp-bio">Biografía</label>
+                    <textarea id="inp-bio" rows="4"
+                        placeholder="Cuéntanos sobre ti y tu experiencia en exploración..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="inp-location">Ubicación / Base</label>
+                    <input type="text" id="inp-location" placeholder="Ej: Base Alpha, Sector 7" />
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-save">
+                        💾 Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="profile-stats-section glass-panel">
+            <h3 class="section-title">Estadísticas de Exploración</h3>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value">--</span>
+                    <span class="stat-label">Misiones</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">--</span>
+                    <span class="stat-label">Objetos</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">--</span>
+                    <span class="stat-label">POIs</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">--</span>
+                    <span class="stat-label">Horas</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security Section -->
+        <section class="profile-security-section glass-panel">
+            <h3 class="section-title">Seguridad</h3>
+
+            <div class="security-actions">
+                <button class="btn-security" id="btn-change-password">
+                    🔐 Cambiar Contraseña
+                </button>
+                <button class="btn-security danger" id="btn-logout-all">
+                    🚪 Cerrar Sesión en Todos los Dispositivos
+                </button>
+            </div>
+        </section>
+    </main>
+</div>

@@ -1,6 +1,7 @@
 /**
  * Dashboard Header Styles
  * Header, nav buttons, profile dropdown
+ * Updated: Frosted glass gray blur design
  */
 
 .dash-header {
@@ -63,35 +64,68 @@
     gap: 15px;
 }
 
-/* Start Mission Button */
+/* ========================================
+   FROSTED GLASS BUTTON BASE
+   ======================================== */
+.glass-btn {
+    background: rgba(60, 60, 70, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+.glass-btn:hover {
+    background: rgba(80, 80, 90, 0.7);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ========================================
+   START MISSION BUTTON - Pill Shape
+   ======================================== */
 .btn-start-mission {
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: rgba(63, 168, 255, 0.1);
-    border: 2px solid #3FA8FF;
-    color: #3FA8FF;
-    padding: 10px 20px;
-    border-radius: 12px;
+    gap: 12px;
+    background: rgba(50, 50, 60, 0.65);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    padding: 12px 28px;
+    border-radius: 50px;
+    /* Pill shape */
     font-family: var(--font-jura);
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 0.95rem;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    text-transform: capitalize;
+    letter-spacing: 0.5px;
+}
+
+.btn-start-mission .icon-btn {
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
 }
 
 .btn-start-mission:hover {
-    background: rgba(63, 168, 255, 0.2);
-    box-shadow: var(--glow-cyan);
-    transform: translateY(-2px);
+    background: rgba(63, 168, 255, 0.25);
+    border-color: rgba(63, 168, 255, 0.5);
+    color: #3FA8FF;
+    box-shadow: 0 4px 20px rgba(63, 168, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.btn-start-mission:hover .icon-btn {
+    filter: brightness(1) invert(0);
+    filter: invert(59%) sepia(98%) saturate(1234%) hue-rotate(187deg) brightness(102%) contrast(101%);
 }
 
 .header-divider {
     width: 1px;
     height: 30px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .icon-btn {
@@ -100,110 +134,173 @@
     object-fit: contain;
 }
 
-/* Notifications */
+/* ========================================
+   NOTIFICATIONS BUTTON - Circle Glass
+   ======================================== */
 .btn-notifications {
     position: relative;
+    background: rgba(50, 50, 60, 0.65);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 10px 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-notifications .icon-btn {
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
+}
+
+.btn-notifications:hover {
+    background: rgba(63, 168, 255, 0.2);
+    border-color: rgba(63, 168, 255, 0.4);
+    color: #3FA8FF;
+}
+
+.btn-notifications:hover .icon-btn {
+    filter: invert(59%) sepia(98%) saturate(1234%) hue-rotate(187deg) brightness(102%) contrast(101%);
+    opacity: 1;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: #ff4444;
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 10px;
+    min-width: 16px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4);
+}
+
+/* ========================================
+   USER PROFILE - Oval Rectangular
+   ======================================== */
+.user-profile-dropdown {
+    position: relative;
+}
+
+.btn-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     background: transparent;
     border: none;
-    font-size: 1.3rem;
+    padding: 0;
     cursor: pointer;
-    padding: 8px;
     transition: all 0.3s ease;
+    color: #fff;
+}
+
+.user-name {
+    font-family: var(--font-jura);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.3px;
+}
+
+.btn-user-profile:hover .user-name {
+    color: #fff;
+}
+
+/* Avatar Container - Oval with blur background */
+.user-avatar-container {
+    position: relative;
+    width: 42px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.btn-notifications:hover {
-    color: #3FA8FF;
-    transform: scale(1.1);
-}
-
-.notification-badge {
+.user-avatar-bg {
     position: absolute;
-    top: 0;
-    right: 0;
-    background: #ff4444;
-    color: #fff;
-    font-size: 0.65rem;
-    font-weight: 700;
-    padding: 2px 5px;
-    border-radius: 10px;
-    min-width: 18px;
-    text-align: center;
-}
+    inset: 0;
+    background: rgba(50, 50, 60, 0.65);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 152px;
 
-/* User Profile */
-.btn-user-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(63, 168, 255, 0.05);
-    border: 1px solid rgba(63, 168, 255, 0.3);
-    padding: 8px 15px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: #fff;
-}
-
-.btn-user-profile:hover {
-    border-color: #3FA8FF;
-    background: rgba(63, 168, 255, 0.1);
 }
 
 .user-avatar {
+    position: relative;
+    z-index: 1;
     width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    height: 50px;
+    border-radius: 152px;
     background: linear-gradient(135deg, #3FA8FF, #0088ff);
+    background-size: cover;
+    background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     color: #000;
-    font-size: 1rem;
+    font-size: 0.85rem;
+    overflow: hidden;
 }
 
-.user-name {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #fff;
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 152px;
+}
+
+.btn-user-profile:hover .user-avatar-bg {
+    border-color: rgba(63, 168, 255, 0.4);
 }
 
 /* Profile Dropdown */
-.user-profile-dropdown {
-    position: relative;
-}
-
 .profile-dropdown-menu {
     position: absolute;
-    top: calc(100% + 8px);
+    top: calc(100% + 12px);
     right: 0;
-    background: rgba(0, 10, 30, 0.98);
-    border: 1px solid #3FA8FF;
-    border-radius: 12px;
-    min-width: 200px;
+    background: rgba(20, 25, 35, 0.95);
+    border: 1px solid rgba(63, 168, 255, 0.3);
+    border-radius: 16px;
+    min-width: 220px;
     z-index: 9999;
-    backdrop-filter: blur(15px);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(63, 168, 255, 0.2);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(63, 168, 255, 0.1);
     animation: fadeIn 0.2s ease-out;
+    overflow: hidden;
 }
 
 .profile-dropdown-menu button:hover {
-    background: rgba(255, 107, 107, 0.1);
+    background: rgba(255, 107, 107, 0.15);
 }
 
-/* Navigation Buttons */
+/* ========================================
+   NAVIGATION BUTTONS - Pill Glass
+   ======================================== */
 .btn-nav-item {
-    padding: 10px 18px;
-    background: rgba(0, 100, 255, 0.15);
-    border: 1px solid rgba(63, 168, 255, 0.5);
-    color: #3fa8ff;
+    padding: 10px 20px;
+    background: rgba(50, 50, 60, 0.65);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.85);
     font-family: var(--font-jura);
     font-size: 0.85rem;
-    font-weight: 600;
-    border-radius: 10px;
+    font-weight: 500;
+    border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
@@ -212,17 +309,15 @@
 
 .btn-nav-item:hover {
     background: rgba(63, 168, 255, 0.25);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(63, 168, 255, 0.3);
-}
-
-.btn-nav-item.btn-taxonomia {
-    background: rgba(39, 174, 96, 0.15);
-    border-color: rgba(46, 204, 113, 0.5);
-    color: #2ecc71;
+    border-color: rgba(63, 168, 255, 0.5);
+    color: #3FA8FF;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(63, 168, 255, 0.2);
 }
 
 .btn-nav-item.btn-taxonomia:hover {
     background: rgba(46, 204, 113, 0.25);
-    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    border-color: rgba(46, 204, 113, 0.5);
+    color: #2ecc71;
+    box-shadow: 0 4px 20px rgba(46, 204, 113, 0.2);
 }

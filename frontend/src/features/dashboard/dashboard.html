@@ -46,16 +46,22 @@
 
       <div class="user-profile-dropdown" id="user-profile-container" style="position:relative;">
         <button class="btn-user-profile" id="btn-user-profile">
-          <span class="user-avatar" id="user-avatar">S</span>
-          <span class="user-name" id="user-name">Schormaker</span>
-          <span style="margin-left:5px; font-size:0.7rem;">▼</span>
+          <span class="user-name" id="user-name">Schormaker .L</span>
+          <div class="user-avatar-container">
+            <div class="user-avatar-bg"></div>
+            <span class="user-avatar" id="user-avatar">S</span>
+          </div>
         </button>
         <div class="profile-dropdown-menu" id="profile-dropdown"
-          style="display:none; position:absolute; top:100%; right:0; margin-top:8px; background:rgba(0,10,30,0.95); border:1px solid #3fa8ff; border-radius:10px; min-width:180px; z-index:1000; backdrop-filter:blur(10px);">
+          style="display:none; position:absolute; top:100%; right:0; margin-top:8px; background:rgba(0,10,30,0.95); border:1px solid rgba(63,168,255,0.3); border-radius:16px; min-width:200px; z-index:1000; backdrop-filter:blur(15px);">
           <div style="padding:15px; border-bottom:1px solid rgba(63,168,255,0.2);">
             <div style="font-size:0.85rem; color:#888;">Conectado como</div>
             <div style="font-weight:bold; color:#3fa8ff;" id="dropdown-email">user@email.com</div>
           </div>
+          <button id="btn-profile" 
+            style="width:100%; padding:12px 15px; background:transparent; border:none; color:#3fa8ff; font-family:'Jura',sans-serif; font-size:0.95rem; cursor:pointer; text-align:left; transition:background 0.2s; border-bottom:1px solid rgba(63,168,255,0.1);">
+            👤 Mi Perfil
+          </button>
           <button id="btn-logout"
             style="width:100%; padding:12px 15px; background:transparent; border:none; color:#ff6b6b; font-family:'Jura',sans-serif; font-size:0.95rem; cursor:pointer; text-align:left; transition:background 0.2s;">
             🚪 Cerrar Sesión

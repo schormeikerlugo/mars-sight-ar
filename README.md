@@ -51,11 +51,12 @@ KEPLER incluye un sistema de notificaciones en tiempo real para mantener a los u
 
 ### Características:
 - **Notificaciones Globales**: Funcionan en todas las secciones (Dashboard, Archivos, Taxonomía, AR).
-- **Persistencia**: Historial guardado en localStorage (30 días de retención).
-- **Timeline (Bitácora)**: Notificaciones agrupadas por día (Hoy, Ayer, fechas anteriores).
+- **Sincronización Cloud**: Guardado en Supabase (`user_notifications`) para acceso cross-device.
+- **Modo Offline**: Fallback automático a localStorage si no hay conexión.
+- **Bitácora Avanzada**: Filtros por tipo (Critical, Alert, Success) y contadores dinámicos.
+- **Timeline**: Agrupación cronológica inteligente.
+- **Borrado Seguro**: Confirmación mediante modales del sistema (System Modals).
 - **Atribución de Usuario**: Cada notificación muestra quién realizó la acción (`👤 por [usuario]`).
-- **Borrado Flexible**: Eliminar notificaciones individuales o por día completo.
-- **Estado del Sistema**: Al iniciar sesión, muestra el estado de Backend, Base de Datos e IA.
 
 ### Tipos de Notificaciones:
 | Tipo | Icono | Duración |

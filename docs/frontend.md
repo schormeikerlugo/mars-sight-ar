@@ -34,7 +34,8 @@ frontend/src/
 ├── js/                   # Lógica Transversal
 │   ├── auth.js           # Cliente Supabase Auth
 │   ├── utils/            # Utilidades (Kalman Filter, Tracker)
-│   └── components/       # Componentes JS (ModalSystem)
+│   ├── services/         # Servicios de estado (NotificationStore)
+│   └── components/       # Componentes JS (ModalSystem, Notifications)
 └── main.js               # Punto de entrada y Router
 ```
 

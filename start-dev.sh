@@ -77,14 +77,14 @@ echo ""
 echo -e "${YELLOW}🐍 Paso 2: Iniciando Backend...${NC}"
 
 # Verificar si ya está corriendo el backend
-if lsof -i:8001 >/dev/null 2>&1; then
-    echo -e "${YELLOW}   ⚠️  Backend ya está corriendo en puerto 8001${NC}"
+if lsof -i:8000 >/dev/null 2>&1; then
+    echo -e "${YELLOW}   ⚠️  Backend ya está corriendo en puerto 8000${NC}"
 else
     # Iniciar backend en background
     cd "$PROJECT_DIR/backend"
     
     if [ -f "venv/bin/python" ]; then
-        nohup ./venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload > /tmp/kepler-backend.log 2>&1 &
+        nohup ./venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload > /tmp/kepler-backend.log 2>&1 &
         BACKEND_PID=$!
         echo "   Backend PID: $BACKEND_PID"
         sleep 2
@@ -146,7 +146,7 @@ echo ""
 echo "  Servicios KEPLER disponibles:"
 echo "  ─────────────────────────────────────"
 echo "  🌐 Frontend:     https://localhost:5180"
-echo "  🐍 Backend API:  http://localhost:8001"
+echo "  🐍 Backend API:  http://localhost:8000"
 echo "  📦 Supabase:     http://localhost:54321"
 echo "  🗄️  Database:     localhost:54322"
 echo ""

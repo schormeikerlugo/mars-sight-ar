@@ -32,6 +32,20 @@ Almacena todos los análisis realizados por los usuarios.
 ### Extensiones Activas
 *   **`vector`:** Permite almacenar embeddings y realizar búsquedas de similitud (`cosine_distance`).
 
+### Tabla: `user_notifications`
+Historial de notificaciones sincronizado por usuario.
+
+| Columna | Tipo | Descripción |
+| :--- | :--- | :--- |
+| `id` | UUID | Primary Key. |
+| `user_id` | UUID | FK al usuario (auth). |
+| `message` | TEXT | Contenido de la notificación. |
+| `type` | VARCHAR | 'critical', 'warning', 'success', 'info'. |
+| `read` | BOOLEAN | Estado de lectura. |
+| `created_at` | TIMESTAMPTZ | Fecha de creación. |
+
+*   **RLS Activo:** Acceso exclusivo por `user_id`.
+
 ---
 
 ## 🗂️ Storage (Buckets)

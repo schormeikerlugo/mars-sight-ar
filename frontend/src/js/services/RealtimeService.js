@@ -34,31 +34,33 @@ export class RealtimeService {
     }
 
     /**
-     * Get user email from user_id (with caching)
+     * Get user display name from user_id (with caching)
+     * Fetches from profiles table for custom display names
      */
-    async getUserEmail(userId) {
+    async getUserDisplayName(userId) {
         if (!userId) return 'Sistema';
         if (this.userCache[userId]) return this.userCache[userId];
 
         try {
+            // Try to get from profiles table first
             const { data, error } = await supabase
-                .from('auth.users')
-                .select('email')
+                .from('profiles')
+                .select('display_name, username')
                 .eq('id', userId)
                 .single();
 
-            if (error || !data) {
-                // Fallback: Use first 8 chars of UUID
-                const shortId = userId.substring(0, 8);
-                this.userCache[userId] = `Usuario-${shortId}`;
-                return this.userCache[userId];
+            if (!error && data) {
+                const name = data.display_name || data.username || `Usuario-${userId.substring(0, 6)}`;
+                this.userCache[userId] = name;
+                return name;
             }
 
-            const email = data.email.split('@')[0]; // Get username from email
-            this.userCache[userId] = email;
-            return email;
+            // Fallback: Use short UUID
+            const shortId = userId.substring(0, 6);
+            this.userCache[userId] = `Usuario-${shortId}`;
+            return this.userCache[userId];
         } catch (e) {
-            const shortId = userId.substring(0, 8);
+            const shortId = userId.substring(0, 6);
             this.userCache[userId] = `Usuario-${shortId}`;
             return this.userCache[userId];
         }
@@ -70,29 +72,29 @@ export class RealtimeService {
         console.log("Realtime Event:", payload);
 
         const { eventType, new: newRec, old: oldRec } = payload;
-        const userEmail = await this.getUserEmail(newRec?.user_id || oldRec?.user_id);
+        const userDisplayName = await this.getUserDisplayName(newRec?.user_id || oldRec?.user_id);
 
         if (eventType === 'INSERT') {
             window.kepler.notify.info(`📡 NUEVA MISIÓN DETECTADA`);
-            window.kepler.notify.success(`Código: ${newRec.codigo || 'S/N'} | Zona: ${newRec.zona || 'Sin definir'}\n👤 por ${userEmail}`);
+            window.kepler.notify.success(`Código: ${newRec.codigo || 'S/N'} | Zona: ${newRec.zona || 'Sin definir'}\n👤 por ${userDisplayName}`);
         }
         else if (eventType === 'UPDATE') {
             if (newRec.estado !== oldRec?.estado) {
                 if (newRec.estado === 'completada') {
                     // Fetch mission stats
-                    await this.showMissionCompletionStats(newRec, userEmail);
+                    await this.showMissionCompletionStats(newRec, userDisplayName);
                 }
                 else if (newRec.estado === 'activa') {
-                    window.kepler.notify.warning(`🚀 MISIÓN ACTIVADA: ${newRec.codigo}\n👤 por ${userEmail}`);
+                    window.kepler.notify.warning(`🚀 MISIÓN ACTIVADA: ${newRec.codigo}\n👤 por ${userDisplayName}`);
                 }
             }
         }
         else if (eventType === 'DELETE') {
-            window.kepler.notify.warning(`⚠️ Misión eliminada del registro central.\n👤 por ${userEmail}`);
+            window.kepler.notify.warning(`⚠️ Misión eliminada del registro central.\n👤 por ${userDisplayName}`);
         }
     }
 
-    async showMissionCompletionStats(mission, userEmail = 'Sistema') {
+    async showMissionCompletionStats(mission, userDisplayName = 'Sistema') {
         try {
             // Dynamically import api to get mission objects
             const { api } = await import('./api.js');
@@ -117,7 +119,7 @@ export class RealtimeService {
             // Show detailed notification with user attribution
             window.kepler.notify.success(
                 `✅ MISIÓN COMPLETADA: ${mission.codigo}\n` +
-                `👤 por ${userEmail}\n` +
+                `👤 por ${userDisplayName}\n` +
                 `📍 Zona: ${mission.zona || 'Sin definir'}\n` +
                 `⏱️ Duración: ${duration}\n` +
                 `📦 Objetos registrados: ${totalObjects}\n` +
@@ -126,7 +128,7 @@ export class RealtimeService {
             );
         } catch (e) {
             console.error('Error fetching mission stats:', e);
-            window.kepler.notify.success(`✅ MISIÓN COMPLETADA: ${mission.codigo}\n👤 por ${userEmail}`);
+            window.kepler.notify.success(`✅ MISIÓN COMPLETADA: ${mission.codigo}\n👤 por ${userDisplayName}`);
         }
     }
 }
